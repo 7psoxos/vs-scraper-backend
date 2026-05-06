@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: vs-scraper
+    runtime: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt && \
+      python -m playwright install chromium && \
+      python -c "from scrapling.cli import install; install([], standalone_mode=False)" || true
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: API_SECRET
+        value: vs-scraper-2026-thanasis
+      - key: ALLOWED_ORIGINS
+        value: "https://vsscraper.xyz,https://*.netlify.app"
+      - key: TIMEOUT_SECONDS
+        value: "30"
+      - key: PYTHON_VERSION
+        value: "3.11.10"
